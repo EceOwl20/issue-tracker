@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Issue {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String   @db.Text
+  status      Status   @default(OPEN)
+  createdAt   DateTime @default(now()) //record is inserted into the issue table the current daytime is inserted
+  updatedAt   DateTime @updatedAt // every time an issue record is updated database engine automatically updates value
+}
+
+//reformat -->npx prisma format the create and apply migration 
+
+//every issue has a status, the status one of three values
+enum Status {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+}
