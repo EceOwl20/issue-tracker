@@ -1,11 +1,11 @@
 'use client';
 
-import { Button, TextArea, TextField } from '@radix-ui/themes'
+import { Button,Callout,TextField } from '@radix-ui/themes'
 import SimpleMDE from "react-simplemde-editor";
-import {useForm, Controller, Form} from 'react-hook-form';
+import {useForm, Controller} from 'react-hook-form';
 import "easymde/dist/easymde.min.css";
 import  axios from 'axios';
-import React from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
 
 //interface defines the shape of our form
@@ -18,13 +18,24 @@ interface IssueForm{
 const NewIssuePage = () => {
   const router = useRouter(); //use next/navigation useRouter
   const {register, control, handleSubmit} = useForm<IssueForm>();
+  const [error,setError] = useState('');
   
   return (
+    <div className='max-w-xl'>
+      {error && <Callout.Root color='red' className='mb-5'>
+        <Callout.Text>{error}</Callout.Text>
+        </Callout.Root>}
     <form 
     className='max-w-xl space-y-3' 
     onSubmit={handleSubmit(async(data)=>{
-      await axios.post('/api/issues',data);
-      router.push('/issues');
+      try {
+        await axios.post('/api/issues',data);
+        router.push('/issues');
+        
+      } catch (error) {
+        console.log(error)
+        setError('An unexpected error occured.')
+      }
 //now finally we want to redirect yhe user with the issue page to do that we use the router hook in nextjs
     })}>
       <TextField.Root placeholder='Title' {...register('title')}>
@@ -36,6 +47,7 @@ const NewIssuePage = () => {
       ></Controller>
       <Button>Submit New Issue</Button>
     </form>
+    </div>
   )
 }
 
