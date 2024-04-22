@@ -23,6 +23,20 @@ const NewIssuePage = () => {
   });
   const [error,setError] = useState('');
   const [isSubmitting,setSubmitting] = useState(false);
+
+  const onSubmit = handleSubmit(async(data)=>{
+    try {
+      setSubmitting(true);
+      await axios.post('/api/issues',data);
+      router.push('/issues');
+      
+    } catch (error) {
+      setSubmitting(false);
+      console.log(error)
+      setError('An unexpected error occured.')
+    }
+//now finally we want to redirect yhe user with the issue page to do that we use the router hook in nextjs
+  });
   
   return (
     <div className='max-w-xl'>
@@ -31,19 +45,7 @@ const NewIssuePage = () => {
         </Callout.Root>}
     <form 
     className='max-w-xl space-y-3' 
-    onSubmit={handleSubmit(async(data)=>{
-      try {
-        setSubmitting(true);
-        await axios.post('/api/issues',data);
-        router.push('/issues');
-        
-      } catch (error) {
-        setSubmitting(false);
-        console.log(error)
-        setError('An unexpected error occured.')
-      }
-//now finally we want to redirect yhe user with the issue page to do that we use the router hook in nextjs
-    })}>
+    onSubmit={onSubmit}>
       <TextField.Root placeholder='Title' {...register('title')}>
       </TextField.Root>
         <ErrorMessage>
