@@ -1,12 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import {z} from 'zod';
 import prisma from "@/prisma/client";
-
-//an object that defines the shape of object and the body of our request 
-const createIssueSchema = z.object({
-    title: z.string().min(1,'Title is required.').max(255),
-    description: z.string().min(1,'Description is required.')
-});
+import { createIssueSchema } from "../../validationSchemas";
 
 //we have to validate our request to make sure it doesnt't have bad data
 //for data validation we use zode --> npm i zod@3.22.2
